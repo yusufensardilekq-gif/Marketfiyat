@@ -1,0 +1,565 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MarketFiyat</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f3f5f8;
+  color:#1e293b;
+}
+
+header{
+  background:linear-gradient(135deg,#064e3b,#16a34a);
+  color:white;
+  padding:25px 20px 30px;
+  border-radius:0 0 28px 28px;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:800;
+}
+
+.logo span{
+  color:#bef264;
+}
+
+header p{
+  margin-top:8px;
+  color:#d1fae5;
+  font-size:13px;
+}
+
+.search{
+  display:flex;
+  gap:8px;
+  margin-top:22px;
+}
+
+.search input{
+  flex:1;
+  min-width:0;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  font-size:15px;
+}
+
+.search button{
+  border:none;
+  border-radius:14px;
+  padding:0 17px;
+  background:#142e22;
+  color:white;
+  font-weight:bold;
+}
+
+main{
+  max-width:650px;
+  margin:auto;
+  padding:20px;
+}
+
+h2{
+  font-size:19px;
+  margin:18px 0 14px;
+}
+
+.categories{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:6px;
+}
+
+.cat{
+  border:1px solid #e2e8f0;
+  background:white;
+  padding:11px 16px;
+  border-radius:30px;
+  white-space:nowrap;
+  cursor:pointer;
+}
+
+.cat.active{
+  background:#dcfce7;
+  color:#166534;
+  border-color:#16a34a;
+}
+
+.card{
+  background:white;
+  border-radius:20px;
+  padding:17px;
+  margin:15px 0;
+  box-shadow:0 5px 18px rgba(0,0,0,.04);
+  animation:show .3s ease;
+}
+
+@keyframes show{
+  from{opacity:0;transform:translateY(8px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.product-head{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-bottom:15px;
+}
+
+.emoji{
+  width:55px;
+  height:55px;
+  display:grid;
+  place-items:center;
+  background:#f1f5f9;
+  border-radius:16px;
+  font-size:30px;
+}
+
+.product-name{
+  font-size:17px;
+  font-weight:bold;
+}
+
+.product-category{
+  font-size:12px;
+  color:#64748b;
+  margin-top:5px;
+}
+
+.prices{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.store{
+  padding:14px;
+  border-radius:15px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+}
+
+.store.best{
+  background:#ecfdf5;
+  border:1.5px solid #16a34a;
+}
+
+.store-name{
+  font-weight:bold;
+  font-size:14px;
+}
+
+.price{
+  font-size:23px;
+  font-weight:bold;
+  margin:10px 0;
+}
+
+.cheapest{
+  font-size:11px;
+  color:#15803d;
+  font-weight:bold;
+}
+
+.recommend{
+  margin-top:13px;
+  padding:13px;
+  border-radius:13px;
+  background:#ecfdf5;
+  color:#166534;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.btn{
+  width:100%;
+  border:none;
+  border-radius:13px;
+  padding:13px;
+  margin-top:12px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:bold;
+}
+
+.add{
+  background:#172e24;
+  color:white;
+}
+
+.delete{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.basket{
+  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  color:white;
+  padding:20px;
+  border-radius:20px;
+  margin-top:25px;
+}
+
+.basket h3{
+  margin-bottom:12px;
+}
+
+.basket p{
+  margin:8px 0;
+  font-size:14px;
+}
+
+.basket strong{
+  color:#a7f3d0;
+}
+
+.admin{
+  background:white;
+  padding:20px;
+  border-radius:20px;
+  margin-top:25px;
+}
+
+.admin input,.admin select{
+  width:100%;
+  padding:13px;
+  margin-top:10px;
+  border:1px solid #dbe3ea;
+  border-radius:12px;
+  font-size:14px;
+  background:white;
+}
+
+.admin button{
+  background:#16a34a;
+  color:white;
+}
+
+.empty{
+  background:white;
+  padding:25px;
+  text-align:center;
+  border-radius:18px;
+  color:#64748b;
+}
+
+footer{
+  text-align:center;
+  color:#94a3b8;
+  padding:25px;
+  font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🛒 Market<span>Fiyat</span></div>
+  <p>Akıllı fiyat karşılaştırma sistemi</p>
+
+  <div class="search">
+    <input id="search" placeholder="Ürün ara...">
+    <button onclick="search()">ARA</button>
+  </div>
+</header>
+
+<main>
+
+<h2>📂 Kategoriler</h2>
+
+<div class="categories">
+  <button class="cat active" onclick="filter('Tümü',this)">Tümü</button>
+  <button class="cat" onclick="filter('Süt Ürünleri',this)">🥛 Süt ürünleri</button>
+  <button class="cat" onclick="filter('Temel Gıda',this)">🍚 Temel gıda</button>
+  <button class="cat" onclick="filter('İçecek',this)">🥤 İçecek</button>
+  <button class="cat" onclick="filter('Atıştırmalık',this)">🍫 Atıştırmalık</button>
+</div>
+
+<h2 id="heading">🛍️ Ürün karşılaştırmaları</h2>
+
+<div id="products"></div>
+
+<div class="basket" id="basket">
+  <h3>🧠 Akıllı alışveriş asistanı</h3>
+  <p>Henüz sepetine ürün eklemedin.</p>
+</div>
+
+<div class="admin">
+  <h2>➕ Ürün ekleme paneli</h2>
+  <p style="font-size:13px;color:#64748b">
+    Ürün ekleyerek fiyat karşılaştırma listesini genişlet.
+  </p>
+
+  <input id="newName" placeholder="Ürün adı">
+
+  <select id="newCategory">
+    <option value="Süt Ürünleri">Süt Ürünleri</option>
+    <option value="Temel Gıda">Temel Gıda</option>
+    <option value="İçecek">İçecek</option>
+    <option value="Atıştırmalık">Atıştırmalık</option>
+    <option value="Diğer">Diğer</option>
+  </select>
+
+  <input id="newEmoji" placeholder="Ürün emojisi (ör: 🧀)" value="🛒">
+
+  <input id="newA101" type="number" step="0.01" placeholder="A101 fiyatı (TL)">
+
+  <input id="newBim" type="number" step="0.01" placeholder="BİM fiyatı (TL)">
+
+  <button class="btn" onclick="addProduct()">ÜRÜN EKLE</button>
+</div>
+
+<footer>
+  MarketFiyat • Fiyat karşılaştırma demo uygulaması
+</footer>
+
+</main>
+
+<script>
+
+let products = [
+ {name:"Beyaz Peynir",emoji:"🧀",category:"Süt Ürünleri",a101:18,bim:20},
+ {name:"Süt 1 Litre",emoji:"🥛",category:"Süt Ürünleri",a101:32,bim:30},
+ {name:"Yoğurt",emoji:"🥣",category:"Süt Ürünleri",a101:45,bim:42},
+ {name:"Tereyağı",emoji:"🧈",category:"Süt Ürünleri",a101:120,bim:115},
+ {name:"Makarna",emoji:"🍝",category:"Temel Gıda",a101:15,bim:13},
+ {name:"Pirinç",emoji:"🍚",category:"Temel Gıda",a101:65,bim:70},
+ {name:"Ayçiçek Yağı",emoji:"🫙",category:"Temel Gıda",a101:95,bim:100},
+ {name:"Şeker",emoji:"🍬",category:"Temel Gıda",a101:38,bim:36},
+ {name:"Su",emoji:"💧",category:"İçecek",a101:8,bim:7},
+ {name:"Meyve Suyu",emoji:"🧃",category:"İçecek",a101:28,bim:30},
+ {name:"Çikolata",emoji:"🍫",category:"Atıştırmalık",a101:25,bim:23},
+ {name:"Bisküvi",emoji:"🍪",category:"Atıştırmalık",a101:18,bim:19}
+];
+
+let basketItems = [];
+let currentCategory = "Tümü";
+
+function money(value){
+ return Number(value).toLocaleString("tr-TR",{
+   minimumFractionDigits:2,
+   maximumFractionDigits:2
+}) + " TL";
+}
+
+function render(list){
+
+ const area = document.getElementById("products");
+
+ if(list.length===0){
+   area.innerHTML='<div class="empty">🔎 Ürün bulunamadı.</div>';
+   return;
+ }
+
+ area.innerHTML=list.map((p,index)=>{
+
+   const best = p.a101<=p.bim ? "A101":"BİM";
+   const diff = Math.abs(p.a101-p.bim);
+   const aBest = p.a101<=p.bim;
+
+   return `
+   <div class="card">
+
+     <div class="product-head">
+       <div class="emoji">${p.emoji}</div>
+       <div>
+         <div class="product-name">${p.name}</div>
+         <div class="product-category">${p.category}</div>
+       </div>
+     </div>
+
+     <div class="prices">
+
+       <div class="store ${aBest?'best':''}">
+         <div class="store-name">A101</div>
+         <div class="price">${money(p.a101)}</div>
+         ${aBest?'<div class="cheapest">✓ EN UCUZ</div>':''}
+       </div>
+
+       <div class="store ${!aBest?'best':''}">
+         <div class="store-name">BİM</div>
+         <div class="price">${money(p.bim)}</div>
+         ${!aBest?'<div class="cheapest">✓ EN UCUZ</div>':''}
+       </div>
+
+     </div>
+
+     <div class="recommend">
+       💡 <b>${best} öneriliyor.</b><br>
+       ${diff===0
+        ? "İki markette fiyat aynı."
+        : best+" marketinde "+money(diff)+" daha uygun."}
+     </div>
+
+     <button class="btn add" onclick="addBasket(${index})">
+       🛒 Sepete ekle
+     </button>
+
+   </div>
+   `;
+ }).join("");
+}
+
+function search(){
+
+ const term=document.getElementById("search")
+ .value.toLocaleLowerCase("tr");
+
+ const list=products.filter(p =>
+   p.name.toLocaleLowerCase("tr").includes(term)
+ );
+
+ document.getElementById("heading").innerText="🔎 Arama sonuçları";
+
+ render(list);
+}
+
+document.getElementById("search").addEventListener("input",search);
+
+function filter(category,button){
+
+ currentCategory=category;
+
+ document.querySelectorAll(".cat").forEach(b=>b.classList.remove("active"));
+ button.classList.add("active");
+
+ document.getElementById("search").value="";
+
+ const list=category==="Tümü"
+   ? products
+   : products.filter(p=>p.category===category);
+
+ document.getElementById("heading").innerText=
+ category==="Tümü"?"🛍️ Ürün karşılaştırmaları":category;
+
+ render(list);
+}
+
+function addBasket(index){
+
+ const item=products[index];
+
+ if(!item)return;
+
+ const existing=basketItems.find(x=>x.name===item.name);
+
+ if(existing){
+   existing.quantity++;
+ }else{
+   basketItems.push({...item,quantity:1});
+ }
+
+ updateBasket();
+}
+
+function updateBasket(){
+
+ const a101Total=basketItems.reduce(
+   (sum,p)=>sum+p.a101*p.quantity,0
+ );
+
+ const bimTotal=basketItems.reduce(
+   (sum,p)=>sum+p.bim*p.quantity,0
+ );
+
+ const mixedTotal=basketItems.reduce(
+   (sum,p)=>sum+Math.min(p.a101,p.bim)*p.quantity,0
+ );
+
+ const saving=Math.min(a101Total,bimTotal)-mixedTotal;
+
+ let bestStore=a101Total<=bimTotal?"A101":"BİM";
+
+ let html=`
+ <h3>🧠 Akıllı alışveriş asistanı</h3>
+ <p>Sepette ${basketItems.reduce((s,p)=>s+p.quantity,0)} ürün var.</p>
+ <p>A101 toplamı: <strong>${money(a101Total)}</strong></p>
+ <p>BİM toplamı: <strong>${money(bimTotal)}</strong></p>
+ <p>Tek market seçimi: <strong>${bestStore}</strong></p>
+ <p>En düşük tek market toplamı: <strong>${money(Math.min(a101Total,bimTotal))}</strong></p>
+ <p>Ürün bazında en ucuz seçim: <strong>${money(mixedTotal)}</strong></p>
+ <p>Marketleri ayrı ayrı seçerek elde edilebilecek ek fark: <strong>${money(saving)}</strong></p>
+ <hr style="margin:15px 0;border-color:#475569">
+ `;
+
+ basketItems.forEach(p=>{
+   html+=`
+   <p>
+   ${p.emoji} ${p.name} × ${p.quantity}
+   <br>
+   <span style="color:#cbd5e1;font-size:12px">
+   En ucuz: ${p.a101<=p.bim?"A101":"BİM"}
+   </span>
+   </p>
+   `;
+ });
+
+ html+=`
+ <button class="btn delete" onclick="clearBasket()">
+   Sepeti temizle
+ </button>
+ `;
+
+ document.getElementById("basket").innerHTML=html;
+}
+
+function clearBasket(){
+ basketItems=[];
+ updateBasket();
+}
+
+function addProduct(){
+
+ const name=document.getElementById("newName").value.trim();
+ const category=document.getElementById("newCategory").value;
+ const emoji=document.getElementById("newEmoji").value.trim()||"🛒";
+ const a101=Number(document.getElementById("newA101").value);
+ const bim=Number(document.getElementById("newBim").value);
+
+ if(!name || !Number.isFinite(a101) || !Number.isFinite(bim)
+ || a101<=0 || bim<=0){
+   alert("Lütfen ürün adını ve geçerli fiyatları gir.");
+   return;
+ }
+
+ if(products.some(p=>p.name.toLocaleLowerCase("tr")===name.toLocaleLowerCase("tr"))){
+   alert("Bu ürün zaten listede.");
+   return;
+ }
+
+ products.push({name,category,emoji,a101,bim});
+
+ document.getElementById("newName").value="";
+ document.getElementById("newA101").value="";
+ document.getElementById("newBim").value="";
+ document.getElementById("newEmoji").value="🛒";
+
+ document.getElementById("search").value="";
+ document.getElementById("heading").innerText="🛍️ Ürün karşılaştırmaları";
+
+ render(products);
+
+ alert("Ürün başarıyla eklendi!");
+}
+
+render(products);
+updateBasket();
+
+</script>
+</body>
+</html>
